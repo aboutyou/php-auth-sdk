@@ -1,4 +1,3 @@
-
 <!DOCTYPE html><html><head><meta charset="utf-8"><style>html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
 
 body{
@@ -124,12 +123,25 @@ td { vertical-align: top; }
 </style><title>HOWTO</title></head><body><h1 id="auth-sdk">auth-sdk</h1>
 <p>The auth-sdk is just a simple wrapper around persistent state storage and redirect response parsing for the
     <a href="http://tools.ietf.org/html/rfc6749#section-4.1">OAuth2 web grant type</a>.</p>
-<p>The auth-sdk hides most of this stuff, so you'll basically have to do 3 things:</p>
+<p>A simpler explanation is given <a href="http://aaronparecki.com/articles/2012/07/29/1/oauth2-simplified">http://aaronparecki.com/articles/2012/07/29/1/oauth2-simplified</a>.
+    You should read it at least once, to have a basic understanding of OAuth2.
+    This sdk covers the "Web Server Apps" part mentioned there.</p>
+<p>The auth-sdk hides most of the OAuth2 stuff, so you'll basically have to do 3 things:</p>
 <ul>
-    <li>Check, if you have permissions (=access token) to call an api method for the user.</li>
-    <li>If not, redirect the user to an external login page. <sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup></li>
-    <li>Parse the redirect sent back to your site after the login. Your app now should have permissions to make an api call on behalf of the user.</li>
+    <li>Check, if you have permissions (=access token) to call an api method for the user.<ul>
+        <li>Call sdk-&gt;getUser()</li>
+    </ul>
+    </li>
+    <li>If not, redirect the user to an external login page. <sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup><ul>
+        <li>Redirect to sdk-&gt;getLoginUrl()</li>
+    </ul>
+    </li>
+    <li>Parse the redirect sent back to your site after the login.<ul>
+        <li>Call sdk-&gt;parseRedirectResponse()</li>
+    </ul>
+    </li>
 </ul>
+<p>Your app now should have permissions to make an api call on behalf of the user.</p>
 <p>You can use the acces token then stored in the auth-sdk for subsequent api calls until the token expires.
     (Server-side or until the user logs out)</p>
 <h2 id="include-with-composer">Include with composer</h2>
@@ -137,17 +149,15 @@ td { vertical-align: top; }
 <pre><code>    &quot;repositories&quot;: [
     {
     &quot;type&quot;: &quot;git&quot;,
-    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/frontend-api-sdks/auth-sdk.git&quot;
+    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/public-sdks-2/php-auth-sdk.git&quot;
     },
     {
     &quot;type&quot;: &quot;git&quot;,
-    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/frontend-api-sdks/av_utils.git&quot;
+    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/public-sdks-2/php-jws.git&quot;
     }
     ],
-    &quot;require&quot;:{
-    &quot;php&quot;: &quot;&gt;=5.4.0&quot;,
-    &quot;antevorte/av_utils&quot;: &quot;dev-master&quot;,
-    &quot;antevorte/auth-sdk&quot;: &quot;dev-master&quot;
+    &quot;require&quot;: {
+    &quot;collins/php-auth-sdk&quot;: &quot;0.2.1&quot;
     }
 </code></pre>
 
@@ -216,10 +226,10 @@ td { vertical-align: top; }
 
 <h2 id="oauth2-token-type-usage">Oauth2 token type usage</h2>
 <ul>
-    <li>Is not supported by the php auth-sdk. However have a look at ./examples/implicit_page.php for a js-only example.</li>
+    <li>Is not supported by the php auth-sdk.</li>
 </ul>
 <h2 id="examples">Examples</h2>
-<p>Surprise! Folder:  ./examples/*</p>
+<p>See the sdk-folder:  ./examples/*</p>
 <h3 id="config">Config</h3>
 <ul>
     <li>Copy <code>./example/common_params.php</code> to <code>./example/common_params.local.php</code>)</li>
@@ -228,6 +238,7 @@ td { vertical-align: top; }
 </ul>
 <pre><code>    * 'clientId'=&gt;'',
     * 'clientToken'=&gt;'',
+    * 'clientSecret'=&gt;'',
     * 'redirectUri'=&gt;''
 </code></pre>
 
@@ -236,10 +247,7 @@ td { vertical-align: top; }
     <ol>
         <li id="fn:1">
             <ul>
-                <li>If the user is not logged in there, it will grant the user for its username and password and then redirect back to your site with an access token.<ul>
-                    <li>.. and it will ask the user to also allow your app the permission to do so, except your app is configured not to explicitly ask that.</li>
-                </ul>
-                </li>
+                <li>If the user is not logged in there, it will grant the user for its username and password and then redirect back to your site with an access token.</li>
                 <li>If your user however already is logged in, it will just redirect back to your site with an access token.</li>
                 <li>There is one more authorization flow step after those possible grants from the user and really fetching the access token, but the auth-sdk will gently hide that from you.</li>
             </ul>
