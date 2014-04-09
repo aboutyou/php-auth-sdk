@@ -29,17 +29,15 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
     "repositories": [
         {
             "type": "git",
-            "url": "git@codebasehq.com:antevorte/frontend-api-sdks/auth-sdk.git"
+            "url": "git@codebasehq.com:antevorte/public-sdks-2/php-auth-sdk.git"
         },
-    "repositories": [
         {
             "type": "git",
-            "url": "git@codebasehq.com:antevorte/frontend-api-sdks/jws-php-service.git"
+            "url": "git@codebasehq.com:antevorte/public-sdks-2/php-jws.git"
         }
     ],
-    "require":{
-        "antevorte/auth-sdk": "dev-master",
-        "collins/jws-php-service": "dev-master"
+    "require": {
+        "collins/php-auth-sdk": "0.1.0"
     }
 ```
 
