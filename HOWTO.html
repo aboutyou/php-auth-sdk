@@ -1,0 +1,249 @@
+
+<!DOCTYPE html><html><head><meta charset="utf-8"><style>html { font-size: 100%; overflow-y: scroll; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+
+body{
+    color:#444;
+    font-family:Georgia, Palatino, 'Palatino Linotype', Times, 'Times New Roman',
+    "Hiragino Sans GB", "STXihei", "微软雅黑", serif;
+    font-size:12px;
+    line-height:1.5em;
+    background:#fefefe;
+    width: 45em;
+    margin: 10px auto;
+    padding: 1em;
+    outline: 1300px solid #FAFAFA;
+}
+
+a{ color: #0645ad; text-decoration:none;}
+a:visited{ color: #0b0080; }
+a:hover{ color: #06e; }
+a:active{ color:#faa700; }
+a:focus{ outline: thin dotted; }
+a:hover, a:active{ outline: 0; }
+
+span.backtick {
+    border:1px solid #EAEAEA;
+    border-radius:3px;
+    background:#F8F8F8;
+    padding:0 3px 0 3px;
+}
+
+::-moz-selection{background:rgba(255,255,0,0.3);color:#000}
+::selection{background:rgba(255,255,0,0.3);color:#000}
+
+a::-moz-selection{background:rgba(255,255,0,0.3);color:#0645ad}
+a::selection{background:rgba(255,255,0,0.3);color:#0645ad}
+
+p{
+    margin:1em 0;
+}
+
+img{
+    max-width:100%;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-weight:normal;
+    color:#111;
+    line-height:1em;
+}
+h4,h5,h6{ font-weight: bold; }
+h1{ font-size:2.5em; }
+h2{ font-size:2em; border-bottom:1px solid silver; padding-bottom: 5px; }
+h3{ font-size:1.5em; }
+h4{ font-size:1.2em; }
+h5{ font-size:1em; }
+h6{ font-size:0.9em; }
+
+blockquote{
+    color:#666666;
+    margin:0;
+    padding-left: 3em;
+    border-left: 0.5em #EEE solid;
+}
+hr { display: block; height: 2px; border: 0; border-top: 1px solid #aaa;border-bottom: 1px solid #eee; margin: 1em 0; padding: 0; }
+
+
+pre , code, kbd, samp {
+    color: #000;
+    font-family: monospace;
+    font-size: 0.88em;
+    border-radius:3px;
+    background-color: #F8F8F8;
+    border: 1px solid #CCC;
+}
+pre { white-space: pre; white-space: pre-wrap; word-wrap: break-word; padding: 5px 12px;}
+pre code { border: 0px !important; padding: 0;}
+code { padding: 0 3px 0 3px; }
+
+b, strong { font-weight: bold; }
+
+dfn { font-style: italic; }
+
+ins { background: #ff9; color: #000; text-decoration: none; }
+
+mark { background: #ff0; color: #000; font-style: italic; font-weight: bold; }
+
+sub, sup { font-size: 75%; line-height: 0; position: relative; vertical-align: baseline; }
+sup { top: -0.5em; }
+sub { bottom: -0.25em; }
+
+ul, ol { margin: 1em 0; padding: 0 0 0 2em; }
+li p:last-child { margin:0 }
+dd { margin: 0 0 0 2em; }
+
+img { border: 0; -ms-interpolation-mode: bicubic; vertical-align: middle; }
+
+table { border-collapse: collapse; border-spacing: 0; }
+td { vertical-align: top; }
+
+@media only screen and (min-width: 480px) {
+    body{font-size:14px;}
+}
+
+@media only screen and (min-width: 768px) {
+    body{font-size:16px;}
+}
+
+@media print {
+    * { background: transparent !important; color: black !important; filter:none !important; -ms-filter: none !important; }
+    body{font-size:12pt; max-width:100%; outline:none;}
+    a, a:visited { text-decoration: underline; }
+    hr { height: 1px; border:0; border-bottom:1px solid black; }
+    a[href]:after { content: " (" attr(href) ")"; }
+    abbr[title]:after { content: " (" attr(title) ")"; }
+    .ir a:after, a[href^="javascript:"]:after, a[href^="#"]:after { content: ""; }
+    pre, blockquote { border: 1px solid #999; padding-right: 1em; page-break-inside: avoid; }
+    tr, img { page-break-inside: avoid; }
+    img { max-width: 100% !important; }
+    @page :left { margin: 15mm 20mm 15mm 10mm; }
+    @page :right { margin: 15mm 10mm 15mm 20mm; }
+    p, h2, h3 { orphans: 3; widows: 3; }
+    h2, h3 { page-break-after: avoid; }
+}
+</style><title>HOWTO</title></head><body><h1 id="auth-sdk">auth-sdk</h1>
+<p>The auth-sdk is just a simple wrapper around persistent state storage and redirect response parsing for the
+    <a href="http://tools.ietf.org/html/rfc6749#section-4.1">OAuth2 web grant type</a>.</p>
+<p>The auth-sdk hides most of this stuff, so you'll basically have to do 3 things:</p>
+<ul>
+    <li>Check, if you have permissions (=access token) to call an api method for the user.</li>
+    <li>If not, redirect the user to an external login page. <sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup></li>
+    <li>Parse the redirect sent back to your site after the login. Your app now should have permissions to make an api call on behalf of the user.</li>
+</ul>
+<p>You can use the acces token then stored in the auth-sdk for subsequent api calls until the token expires.
+    (Server-side or until the user logs out)</p>
+<h2 id="include-with-composer">Include with composer</h2>
+<p>(currently only code in development branch, so:)</p>
+<pre><code>    &quot;repositories&quot;: [
+    {
+    &quot;type&quot;: &quot;git&quot;,
+    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/frontend-api-sdks/auth-sdk.git&quot;
+    },
+    {
+    &quot;type&quot;: &quot;git&quot;,
+    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/frontend-api-sdks/av_utils.git&quot;
+    }
+    ],
+    &quot;require&quot;:{
+    &quot;php&quot;: &quot;&gt;=5.4.0&quot;,
+    &quot;antevorte/av_utils&quot;: &quot;dev-master&quot;,
+    &quot;antevorte/auth-sdk&quot;: &quot;dev-master&quot;
+    }
+</code></pre>
+
+<h2 id="oauth2-web-grant-type-usage">Oauth2 web grant type usage</h2>
+<h3 id="check-for-permissions-or-login">Check for permissions or login:</h3>
+<ul>
+    <li>./examples/parent_page.php</li>
+    <li>Create an instance of the auth-sdk:</li>
+</ul>
+<pre><code>$authSDK = new AuthSDK(array(
+    'clientId'=&gt;'from_dev_center',
+    'clientToken'=&gt;'from_dev_center',
+    'clientSecret' =&gt; 'from_dev_center',
+    'redirectUri'=&gt;'entered_in_dev_center',
+    'loginUrl'=&gt;'from_dev_center',
+    'resourceUrl'=&gt;'from_dev_center',
+    'scope'=&gt;'email|TODO',
+    'popup'=&gt;'true|false',
+    ),new StorageService());
+</code></pre>
+
+<ul>
+    <li>Check, if login button|redirect needed,</li>
+    <li>Its also possible to set 'state' params (will be returned)</li>
+</ul>
+<pre><code>$authResult = $authSDK-&gt;getUser();
+    if($authResult-&gt;hasErrors()){
+    //optional, add values you want to get back on your redirect endpoint
+    //but do this before getLoginUrl()
+    $authSDK-&gt;setState('someKey','someVal');
+
+    $renderLoginButton( $authSDK-&gt;getLoginUrl() ); //$renderLoginButton(..) is your method.
+    }else{
+    var_dump($authResult-&gt;getResult()-&gt;response);
+    }
+</code></pre>
+
+<h3 id="parse-the-response-login-redirected-back-to-your-site">Parse the response (login redirected back to your site):</h3>
+<ul>
+    <li>./examples/result_page.php</li>
+    <li>Create an auth-sdk instance:</li>
+</ul>
+<pre><code>$authSDK = new AuthSDK(array( .. ) ); //see above
+</code></pre>
+
+<ul>
+    <li>FIRST parse the response with the auth-sdk</li>
+</ul>
+<pre><code>$state = $authSDK-&gt;parseRedirectResponse();
+    //for $state, see examples
+</code></pre>
+
+<ul>
+    <li>Make an api call:</li>
+</ul>
+<pre><code>$apiResult = $authSDK-&gt;api('/me');
+    if($apiResult-&gt;hasErrors()){
+    var_dump($apiResult-&gt;getErrors());
+    }else{
+    var_dump($apiResult-&gt;getResult()-&gt;response);
+
+    //optional get additional values back
+    var_dump($authSDK-&gt;getState('someKey'));
+    }
+</code></pre>
+
+<h2 id="oauth2-token-type-usage">Oauth2 token type usage</h2>
+<ul>
+    <li>Is not supported by the php auth-sdk. However have a look at ./examples/implicit_page.php for a js-only example.</li>
+</ul>
+<h2 id="examples">Examples</h2>
+<p>Surprise! Folder:  ./examples/*</p>
+<h3 id="config">Config</h3>
+<ul>
+    <li>Copy <code>./example/common_params.php</code> to <code>./example/common_params.local.php</code>)</li>
+    <li>Change the params in ./example/common_params.local.php to match your values (from dev center)</li>
+    <li>Set the following values in the auth-sdk constructor config array on every <code>*_page.php</code> with your real credentials:</li>
+</ul>
+<pre><code>    * 'clientId'=&gt;'',
+    * 'clientToken'=&gt;'',
+    * 'redirectUri'=&gt;''
+</code></pre>
+
+<div class="footnote">
+    <hr />
+    <ol>
+        <li id="fn:1">
+            <ul>
+                <li>If the user is not logged in there, it will grant the user for its username and password and then redirect back to your site with an access token.<ul>
+                    <li>.. and it will ask the user to also allow your app the permission to do so, except your app is configured not to explicitly ask that.</li>
+                </ul>
+                </li>
+                <li>If your user however already is logged in, it will just redirect back to your site with an access token.</li>
+                <li>There is one more authorization flow step after those possible grants from the user and really fetching the access token, but the auth-sdk will gently hide that from you.</li>
+            </ul>
+            <p><a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+        </li>
+    </ol>
+</div></body></html>
