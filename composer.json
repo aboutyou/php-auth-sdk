@@ -11,7 +11,7 @@
     "repositories": [
         {
             "type": "git",
-            "url": "git@codebasehq.com:antevorte/public-sdks-2/php-jws.git"
+            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@@codebasehq.com:antevorte/public-sdks-2/php-jws.git"
         }
     ],
     "require":{
