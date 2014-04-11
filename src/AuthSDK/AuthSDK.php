@@ -53,7 +53,7 @@ class AuthSDK
         $this->_clientToken = $params['clientToken'];
         $this->_clientSecret = $params['clientSecret'];
         $this->_loginUrl = isset($params['loginUrl']) ? $params['loginUrl'] : 'https://checkout.mary-paul.de';
-        $this->_resourceUrl = $params['resourceUrl'];
+        $this->_loginUrl = isset($params['resourceUrl']) ? $params['resourceUrl'] : 'https://oauth.collins.kg/oauth';
         $this->_redirectUri = $params['redirectUri'];
         $this->_scope = $params['scope'];
         $this->_popup = isset($params['popup']) ? $params['popup'] : false;
@@ -64,7 +64,7 @@ class AuthSDK
 
     protected function checkParams($params)
     {
-        $requiredParams = array('clientId', 'clientToken', 'resourceUrl', 'redirectUri', 'scope');
+        $requiredParams = array('clientId', 'clientToken', 'redirectUri', 'scope');
         $missingParams = array();
         foreach ($requiredParams as $testParam) {
             if (!isset($params[$testParam])) {

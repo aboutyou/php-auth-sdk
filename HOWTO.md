@@ -35,7 +35,7 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
     }
   ],
   "require": {
-    "collins/php-auth-sdk": "0.2.4"
+    "collins/php-auth-sdk": "0.2.5"
   }
 ```
 
@@ -52,11 +52,13 @@ $authSDK = new AuthSDK(array(
 		'clientToken'=>'from_dev_center',
 		'clientSecret' => 'from_dev_center',
 		'redirectUri'=>'entered_in_dev_center',
-		'resourceUrl'=>'https://oauth.collins.kg/oauth',
 		'scope'=>'firstname',
 		'popup'=>'false|true', //false will render the login webpage, true a simple login version
 	),new SessionStorage());
 ```
+
+(There are two optional parameters that can be "overwritten" 'loginUrl' and 'resourceUrl'. But usually there is no need
+for that)
 
 * Check, if login button|redirect needed,
 * Its also possible to set 'state' params (will be returned)
