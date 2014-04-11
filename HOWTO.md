@@ -35,7 +35,7 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
     }
   ],
   "require": {
-    "collins/php-auth-sdk": "0.2.2"
+    "collins/php-auth-sdk": "0.2.3"
   }
 ```
 
@@ -52,10 +52,10 @@ $authSDK = new AuthSDK(array(
 		'clientToken'=>'from_dev_center',
 		'clientSecret' => 'from_dev_center',
 		'redirectUri'=>'entered_in_dev_center',
-		'loginUrl'=>'from_dev_center',
-		'resourceUrl'=>'from_dev_center',
+		'loginUrl'=>'https://checkout.mary-paul.de',
+		'resourceUrl'=>'https://oauth.collins.kg/oauth',
 		'scope'=>'firstname',
-		'popup'=>'true|false', //false will render the login webpage, true a simple login version
+		'popup'=>'false|true', //false will render the login webpage, true a simple login version
 	),new SessionStorage());
 ```
 

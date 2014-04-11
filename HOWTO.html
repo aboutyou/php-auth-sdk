@@ -156,7 +156,7 @@ td { vertical-align: top; }
     }
     ],
     &quot;require&quot;: {
-    &quot;collins/php-auth-sdk&quot;: &quot;0.2.2&quot;
+    &quot;collins/php-auth-sdk&quot;: &quot;0.2.3&quot;
     }
 </code></pre>
 
@@ -171,10 +171,10 @@ td { vertical-align: top; }
     'clientToken'=&gt;'from_dev_center',
     'clientSecret' =&gt; 'from_dev_center',
     'redirectUri'=&gt;'entered_in_dev_center',
-    'loginUrl'=&gt;'from_dev_center',
-    'resourceUrl'=&gt;'from_dev_center',
+    'loginUrl'=&gt;'https://checkout.mary-paul.de',
+    'resourceUrl'=&gt;'https://oauth.collins.kg/oauth',
     'scope'=&gt;'firstname',
-    'popup'=&gt;'true|false', //false will render the login webpage, true a simple login version
+    'popup'=&gt;'false|true', //false will render the login webpage, true a simple login version
     ),new SessionStorage());
 </code></pre>
 
