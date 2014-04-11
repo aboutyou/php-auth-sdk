@@ -35,7 +35,7 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
     }
   ],
   "require": {
-    "collins/php-auth-sdk": "0.2.5"
+    "collins/php-auth-sdk": "0.2.6"
   }
 ```
 

@@ -1,6 +1,6 @@
 {
     "name": "collins/php-auth-sdk",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "description": "External application authorization SDK",
     "license": "proprietary",
     "autoload": {
