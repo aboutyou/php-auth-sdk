@@ -52,7 +52,7 @@ class AuthSDK
         $this->_clientId = $params['clientId'];
         $this->_clientToken = $params['clientToken'];
         $this->_clientSecret = $params['clientSecret'];
-        $this->_loginUrl = $params['loginUrl'];
+        $this->_loginUrl = isset($params['loginUrl']) ? $params['loginUrl'] : 'https://checkout.mary-paul.de';
         $this->_resourceUrl = $params['resourceUrl'];
         $this->_redirectUri = $params['redirectUri'];
         $this->_scope = $params['scope'];
@@ -64,7 +64,7 @@ class AuthSDK
 
     protected function checkParams($params)
     {
-        $requiredParams = array('clientId', 'clientToken', 'loginUrl', 'resourceUrl', 'redirectUri', 'scope');
+        $requiredParams = array('clientId', 'clientToken', 'resourceUrl', 'redirectUri', 'scope');
         $missingParams = array();
         foreach ($requiredParams as $testParam) {
             if (!isset($params[$testParam])) {
