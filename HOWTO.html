@@ -145,19 +145,18 @@ td { vertical-align: top; }
 <p>You can use the acces token then stored in the auth-sdk for subsequent api calls until the token expires.
     (Server-side or until the user logs out)</p>
 <h2 id="include-with-composer">Include with composer</h2>
-<p>(currently only code in development branch, so:)</p>
-<pre><code>    &quot;repositories&quot;: [
+<pre><code>  &quot;repositories&quot;: [
     {
     &quot;type&quot;: &quot;git&quot;,
-    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/public-sdks-2/php-auth-sdk.git&quot;
+    &quot;url&quot;: &quot;https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git&quot;
     },
     {
     &quot;type&quot;: &quot;git&quot;,
-    &quot;url&quot;: &quot;git@codebasehq.com:antevorte/public-sdks-2/php-jws.git&quot;
+    &quot;url&quot;: &quot;https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git&quot;
     }
     ],
     &quot;require&quot;: {
-    &quot;collins/php-auth-sdk&quot;: &quot;0.2.1&quot;
+    &quot;collins/php-auth-sdk&quot;: &quot;0.2.2&quot;
     }
 </code></pre>
 
@@ -174,9 +173,9 @@ td { vertical-align: top; }
     'redirectUri'=&gt;'entered_in_dev_center',
     'loginUrl'=&gt;'from_dev_center',
     'resourceUrl'=&gt;'from_dev_center',
-    'scope'=&gt;'email|TODO',
-    'popup'=&gt;'true|false',
-    ),new StorageService());
+    'scope'=&gt;'firstname',
+    'popup'=&gt;'true|false', //false will render the login webpage, true a simple login version
+    ),new SessionStorage());
 </code></pre>
 
 <ul>

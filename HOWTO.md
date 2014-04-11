@@ -23,22 +23,20 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
 
 ## Include with composer
 
-(currently only code in development branch, so:)
-
 ```
-    "repositories": [
-        {
-            "type": "git",
-            "url": "git@codebasehq.com:antevorte/public-sdks-2/php-auth-sdk.git"
-        },
-        {
-            "type": "git",
-            "url": "git@codebasehq.com:antevorte/public-sdks-2/php-jws.git"
-        }
-    ],
-    "require": {
-        "collins/php-auth-sdk": "0.2.1"
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git"
+    },
+    {
+      "type": "git",
+      "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
     }
+  ],
+  "require": {
+    "collins/php-auth-sdk": "0.2.2"
+  }
 ```
 
 ## Oauth2 web grant type usage
@@ -56,9 +54,9 @@ $authSDK = new AuthSDK(array(
 		'redirectUri'=>'entered_in_dev_center',
 		'loginUrl'=>'from_dev_center',
 		'resourceUrl'=>'from_dev_center',
-		'scope'=>'email|TODO',
-		'popup'=>'true|false',
-	),new StorageService());
+		'scope'=>'firstname',
+		'popup'=>'true|false', //false will render the login webpage, true a simple login version
+	),new SessionStorage());
 ```
 
 * Check, if login button|redirect needed,
