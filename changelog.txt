@@ -1,0 +1,10 @@
+Version 0.3.0:
+
+- improved: getLoginUrl() can be called multiple times. (Will be regenerated only if parseRedirectResponse() === true)
+- improved: logout() has an optional redirectUrl parameter (Will be set to the constructor arg 'redirectUri', if not set)
+- improved: every constructor arg not oauth2 required is now optional with default values.
+- changed: parseRedirectResponse() returns a bool
+- changed: popup parameter default value was set to: true
+- new: examples/basic.php
+- new: getLogoutUrl() method added, with optional redirectUrl parameter
+- updated: documentation howto/pdf

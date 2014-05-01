@@ -1,11 +1,10 @@
 <?php
 return array(
 
-    'loginUrl' => 'https://checkout.mary-paul.de',            //TODO use right one for your parent
-    'resourceUrl' => 'https://oauth.collins.kg/oauth',
-
-    'scope' => 'firstname',
-    'popup' => false,
+    //These two are optional (the are the default values)
+    //But overwrite them, if you have been told different settings:
+    //'loginUrl' => 'https://checkout.mary-paul.de',
+    //'resourceUrl' => 'https://oauth.collins.kg/oauth',
 
 //TODO UNCOMMENT AND SET THIS:
 //        'redirectUri' => 'TODO one set in your staging or live application config (dev-center)',

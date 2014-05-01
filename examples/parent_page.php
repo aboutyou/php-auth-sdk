@@ -40,6 +40,9 @@ if ($loggedInResult->hasErrors()) {
     <form method="post">
         <input type="submit" name="logout" value="logout"></input>
     </form>
+    <a href="<?php echo $authSDK->getLogoutUrl('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']) ?>">Logout
+        via
+        Url</a>
     <p>.. or check child-apps allowed by current user at:
         <a href="<?php echo $authSDK->_loginUrl . '/apps/list' ?>" target="_blank">My apps</a>
     </p>
@@ -77,7 +80,7 @@ if (isset($_POST['doit'])) {
     $apiReturn = $authSDK->api('/me');
     //if we already have an access token, it should return the correct api answer
     if (!$apiReturn->hasErrors()) {
-        echo '<h2>auth-sdk returned sucess</h2>';
+        echo '<h2>auth-sdk returned success</h2>';
         var_dump($apiReturn->getResult()->response);
     } else {
         echo '<h2>auth-sdk returned erros</h2>';

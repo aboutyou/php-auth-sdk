@@ -48,23 +48,25 @@ class AuthSDK
     public function __construct(array $params, StorageInterface $storageStrategy)
     {
         $this->checkParams($params);
+
         $this->_storageStrategy = $storageStrategy;
+
         $this->_clientId = $params['clientId'];
         $this->_clientToken = $params['clientToken'];
         $this->_clientSecret = $params['clientSecret'];
+        $this->_redirectUri = $params['redirectUri'];
+
         $this->_loginUrl = isset($params['loginUrl']) ? $params['loginUrl'] : 'https://checkout.mary-paul.de';
         $this->_resourceUrl = isset($params['resourceUrl']) ? $params['resourceUrl'] : 'https://oauth.collins.kg/oauth';
-        $this->_redirectUri = $params['redirectUri'];
-        $this->_scope = $params['scope'];
-        $this->_popup = isset($params['popup']) ? $params['popup'] : false;
+        $this->_scope = isset($params['scope']) ? $params['scope'] : 'firstname';
+        $this->_popup = isset($params['popup']) ? $params['popup'] : true;
 
         $this->_storageStrategy->init($this->_clientId);
-
     }
 
     protected function checkParams($params)
     {
-        $requiredParams = array('clientId', 'clientToken', 'redirectUri', 'scope');
+        $requiredParams = array('clientId', 'clientToken', 'clientSecret', 'redirectUri');
         $missingParams = array();
         foreach ($requiredParams as $testParam) {
             if (!isset($params[$testParam])) {
@@ -134,47 +136,27 @@ class AuthSDK
 
     /**
      * Use this function on your redirect page, to parse the result into the sdk.
+     * Notice this method resets the csrf-token in case of success (returns true), meaning
+     * calls to getLoginUrl() should only be made after this method was called.
      *
-     * Returns 'success'|'cancel'|false
-     *
-     * @return string|false
+     * @return boolean
      */
     public function parseRedirectResponse()
     {
         //the sdk requires state was given for auth request..
-        if ($this->getState('csrf')) {
+        if (isset($_GET['state'],$_GET['code']) && $this->getState('csrf')) {
             $states = $this->parseStateUrlValue($_GET['state']);
             if (isset($states['csrf']) && $this->getState('csrf') === $states['csrf']) {
 
+                unset($states['csrf']);
                 $this->_storageStrategy->setPersistentData('states', $states);
+                $this->setGrantCode($_GET['code']);
+                $this->setAccessToken(null);
+                return true;
 
-                //version a) if set directly by authserver
-                if (isset($_GET['code'])) {
-                    $this->setGrantCode($_GET['code']);
-                    $this->setAccessToken(null);
-                    return 'success';
-                }
-
-                //varsion b TODO unused) if "wrapped" by checkout
-                if (isset($_GET['result'])) {
-
-                    if ($_GET['result'] == 'success') {
-                        $this->setGrantCode($_GET['code']);
-                        $this->setAccessToken(null);
-                        return $_GET['result'];
-                    } else {
-                        if ($_GET['result'] == 'cancel') {
-                            return $_GET['result'];
-                        } else {
-                            return false;
-                        }
-                    }
-
-                }
             }
         }
         return false;
-
     }
 
     /**
@@ -185,12 +167,10 @@ class AuthSDK
     protected function getAccessToken()
     {
         if (isset($this->_accessToken)) {
-            //TODO ? if($this->_accessToken->expiresDate > time()) return null;
             return $this->_accessToken;
         }
         if ($persistentProperty = $this->_storageStrategy->getPersistentData('accessToken')) {
             $this->_accessToken = $persistentProperty;
-            //TODO ? if($this->_accessToken->expiresDate > time()) return null;
             return $persistentProperty;
         }
         return null;
@@ -248,11 +228,18 @@ class AuthSDK
     }
 
     /**
+     * Creates a loginUrl containing all relevant information from the constructor arguments,
+     * signs the request and adds a csrf-token. Please notice that the csrf-token will be regenerated if
+     * parseRedirectResponse() is called AND returns true (Meaning, if you create some loginUrls before calling
+     * parseRedirectResponse() and some after calling it, the ones created before will be invalid.)
+     *
      * @return string
      */
     public function getLoginUrl()
     {
-        $this->setState('csrf', md5(uniqid($this->_clientToken, true)));
+        if (!$this->getState('csrf')){
+            $this->setState('csrf', md5(uniqid($this->_clientToken, true)));
+        }
 
         $signService = new SignService(
             new SignServiceConfig(
@@ -272,56 +259,53 @@ class AuthSDK
         return rtrim($this->_loginUrl, '/') . '?app_id='.$this->_clientId.'&asr='.$payload;
     }
 
-    public function logout()
+    /**
+     * @param string $redirectUrl The url where you want to be redirect back after logout, if none the redirectUri of sdk config will be used
+     */
+    public function logout($redirectUrl = null)
     {
-
-        //TODO unsetting this should be unneeded if server removes token on logout..
-        $this->_grantCode = null;
-        $this->_accessToken = null;
-        $this->_state = null;
-        $this->_userAuthResult = null;
-        $this->_storageStrategy->clearAllPersistentData();
-
         header(
-            "Location: " . rtrim($this->_loginUrl, '/') . '/user/logout?' . http_build_query(
-                array('redirectUri' => $this->_redirectUri)
-            )
+            'Location: ' . $this->getLogoutUrl($redirectUrl)
         );
         die();
-
     }
 
     /**
-     * Tries to fetch the api resource
-     * //     * If token is not provided (default) will try OAuth2 web-flow, else implicit-flow..
+     * @param string $redirectUrl The url where you want to be redirect back after logout, if none the redirectUri of sdk config will be used
+     */
+    public function getLogoutUrl($redirectUrl = null)
+    {
+        if(!$redirectUrl){
+            $redirectUrl = $this->_redirectUri;
+        }
+
+        return rtrim($this->_loginUrl, '/') . '/user/logout?' . http_build_query(
+            array('redirectUri' => $redirectUrl)
+        );
+    }
+
+    /**
+     * Tries to fetch the api resource.
      * @param $resourcePath
-    //	 * @param string $token
      * @param string $httpMethod
      * @param array $params
      * @param bool $lastRetry
      * @return AuthResult
      */
     public function api(
-        $resourcePath, /* $token=false,*/
+        $resourcePath,
         $httpMethod = 'get',
-        array $params = array(), /*TODO experimental: */
+        array $params = array(),
         $lastRetry = false
     ) {
 
         $curl = $this->createCurl();
 
-//		if(!$token){ //TODO just to test token authorization (instead of grant_code)
         $tokenResult = $this->getToken();
         if ($tokenResult->hasErrors()) {
             return $tokenResult;
         }
         $curl->setHeader('Authorization', 'Bearer ' . $this->getAccessToken()->access_token);
-//		}else{
-//			$obj = new \stdClass();
-//			$obj->access_token = $token;
-//			$this->setAccessToken($obj);
-//			$curl->setHeader('Authorization','Bearer '.$this->getAccessToken()->access_token);
-//		}
 
         $url = rtrim($this->_resourceUrl, '/') . '/api' . $resourcePath . '?' . http_build_query($params);
         $curl->$httpMethod(rtrim($this->_resourceUrl, '/') . '/api' . $resourcePath, $params);

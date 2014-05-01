@@ -21,7 +21,7 @@ $authSDK = new AuthSDK(include 'common_params.local.php', new SessionStorage());
 //page is called after redirect to login and should return success + grantCode or cancel..
 $codeSet = $authSDK->parseRedirectResponse();
 
-if ($codeSet == 'success') {
+if ($authSDK->parseRedirectResponse()) {
 
     //test retrieving additional state after redirected back to app:
     echo '<b>additional state info</b>';var_dump($authSDK->getState('path'));
