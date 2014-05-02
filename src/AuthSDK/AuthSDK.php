@@ -209,7 +209,7 @@ class AuthSDK
                     'code' => $this->getGrantCode()
                 ];
 
-                $url = rtrim($this->_resourceUrl, '/') . '/oauth/token?' . http_build_query($params);
+                $url = rtrim($this->_resourceUrl, '/') . '/oauth/token?' . http_build_query($params,null,'&');
                 $curl->get($url);
 
                 if ($curl->error) {
@@ -275,12 +275,20 @@ class AuthSDK
      */
     public function getLogoutUrl($redirectUrl = null)
     {
+        //maybe the user was logged out already or the loginUrl is wrong
+        //in any case remove the oauth session data
+        $this->_grantCode = null;
+        $this->_accessToken = null;
+        $this->_state = null;
+        $this->_userAuthResult = null;
+        $this->_storageStrategy->clearAllPersistentData();
+
         if(!$redirectUrl){
             $redirectUrl = $this->_redirectUri;
         }
 
         return rtrim($this->_loginUrl, '/') . '/user/logout?' . http_build_query(
-            array('redirectUri' => $redirectUrl)
+            array('redirectUri' => $redirectUrl),null,'&'
         );
     }
 
@@ -307,7 +315,7 @@ class AuthSDK
         }
         $curl->setHeader('Authorization', 'Bearer ' . $this->getAccessToken()->access_token);
 
-        $url = rtrim($this->_resourceUrl, '/') . '/api' . $resourcePath . '?' . http_build_query($params);
+        $url = rtrim($this->_resourceUrl, '/') . '/api' . $resourcePath . '?' . http_build_query($params,null,'&');
         $curl->$httpMethod(rtrim($this->_resourceUrl, '/') . '/api' . $resourcePath, $params);
 
         if ($curl->http_status_code == 403 && !$lastRetry) {

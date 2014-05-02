@@ -1,3 +1,12 @@
+Version 0.3.2:
+
+- improved: logout works(remove oauth session) even if it fails at logoutUrl
+- improved: always force '&' as get params separator
+
+Version 0.3.1:
+
+- bugfix: typo in composer.json
+
 Version 0.3.0:
 
 - improved: getLoginUrl() can be called multiple times. (Will be regenerated only if parseRedirectResponse() === true)
