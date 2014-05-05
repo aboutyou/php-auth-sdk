@@ -156,6 +156,9 @@ class AuthSDK
 
             }
         }
+        if (isset($_GET['logout'])){
+            $this->cleanUpAfterLogout();
+        }
         return false;
     }
 
@@ -260,10 +263,14 @@ class AuthSDK
     }
 
     /**
-     * @param string $redirectUrl The url where you want to be redirect back after logout, if none the redirectUri of sdk config will be used
+     * @param string $redirectUrl The url where you want to be redirect back after logout, if none the redirectUri of
+     * sdk config will be used. In either case a get prameter logout=true will be appended
      */
     public function logout($redirectUrl = null)
     {
+        //maybe the user was logged out already or the loginUrl is wrong
+        //in any case remove the oauth session data
+        $this->cleanUpAfterLogout();
         header(
             'Location: ' . $this->getLogoutUrl($redirectUrl)
         );
@@ -271,25 +278,42 @@ class AuthSDK
     }
 
     /**
-     * @param string $redirectUrl The url where you want to be redirect back after logout, if none the redirectUri of sdk config will be used
+     * @param string $redirectUrl The url where you want to be redirect back after logout, if none the redirectUri of
+     * sdk config will be used. In either case a get prameter logout=true will be appended
+     * @return string the logoutUrl with a parameter logout=true appended;
      */
     public function getLogoutUrl($redirectUrl = null)
     {
-        //maybe the user was logged out already or the loginUrl is wrong
-        //in any case remove the oauth session data
-        $this->_grantCode = null;
-        $this->_accessToken = null;
-        $this->_state = null;
-        $this->_userAuthResult = null;
-        $this->_storageStrategy->clearAllPersistentData();
-
         if(!$redirectUrl){
             $redirectUrl = $this->_redirectUri;
+        }
+
+        $query = parse_url($redirectUrl, PHP_URL_QUERY);
+
+        if ($query) {
+            if (strpos($query, 'logout=true') === false) {
+                $redirectUrl .= '&logout=true';
+            }
+        } else {
+            $redirectUrl .= '?logout=true';
         }
 
         return rtrim($this->_loginUrl, '/') . '/user/logout?' . http_build_query(
             array('redirectUri' => $redirectUrl),null,'&'
         );
+    }
+
+    /**
+     * Call this function after the redirect to your logoutUrl (it is called automatically by the
+     * parseRedirectResponse if the url contains a logout get parameter, becaouse getLogoutUrl()/logout() will append
+     * this automatically)
+     */
+    public function cleanUpAfterLogout(){
+        $this->_grantCode = null;
+        $this->_accessToken = null;
+        $this->_state = null;
+        $this->_userAuthResult = null;
+        $this->_storageStrategy->clearAllPersistentData();
     }
 
     /**

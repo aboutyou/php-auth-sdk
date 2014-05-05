@@ -5,8 +5,8 @@ require __DIR__.'/../vendor/autoload.php';
 
 use AuthSDK\AuthSDK;
 use AuthSDK\SessionStorage;
-
-$authSDK = new AuthSDK(include 'common_params.local.php', new SessionStorage());
+$configParams = include 'common_params.local.php';
+$authSDK = new AuthSDK($configParams, new SessionStorage());
 ?>
 
 
@@ -15,10 +15,10 @@ $authSDK = new AuthSDK(include 'common_params.local.php', new SessionStorage());
 
 <br>
 <hr>
-<h2>Logged in?</h2>
+<h2>Logged in with app/clientId: <?php echo $configParams['clientId']?> ?</h2>
 
 <?php
-
+$authSDK->parseRedirectResponse();
 $loggedInResult = $authSDK->getUser();
 
 
@@ -63,15 +63,20 @@ if (isset($_POST['logout'])) {
         var_dump($apiReturn->getErrors());
     }
 }
+if (isset($_POST['destroy'])) {
+    session_destroy();
+}
 
 ?>
 
 <hr>
-<h2>Test api call</h2>
+<h2>
+    <form method="post">
+    <span>test api call: <input type="submit" name="doit" value="/api/me"></span>
+    </form>
+</h2>
 
-<form method="post">
-    <input type="submit" name="doit" value="/me">
-</form>
+
 
 <?php
 
@@ -80,10 +85,10 @@ if (isset($_POST['doit'])) {
     $apiReturn = $authSDK->api('/me');
     //if we already have an access token, it should return the correct api answer
     if (!$apiReturn->hasErrors()) {
-        echo '<h2>auth-sdk returned success</h2>';
+        echo '<h2>Success:</h2>';
         var_dump($apiReturn->getResult()->response);
     } else {
-        echo '<h2>auth-sdk returned erros</h2>';
+        echo '<h2>Errors:</h2>';
         var_dump($apiReturn->getErrors());
     }
 }
@@ -91,11 +96,24 @@ if (isset($_POST['doit'])) {
 ?>
 
 <hr>
-<h2>Session information</h2>
+<h2>auth-sdk args:</h2>
 
-<?php @session_start();
-var_dump($_SESSION) ?>
+<?php
+var_dump($configParams);
+?>
+
 <hr>
-<br>
+<h2>session information:</h2>
+
+<?php
+@session_start();
+var_dump(isset($_SESSION)?$_SESSION:'empty')
+?>
+
+<form method="post">
+    <span>Clean Oauth2 session: <input type="submit" name="destroy" value="Reset"></span>
+</form>
+
+<hr>
 </body>
 </html>

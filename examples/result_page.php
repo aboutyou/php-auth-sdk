@@ -17,10 +17,6 @@ use AuthSDK\AuthSDK;
 use AuthSDK\SessionStorage;
 
 $authSDK = new AuthSDK(include 'common_params.local.php', new SessionStorage());
-
-//page is called after redirect to login and should return success + grantCode or cancel..
-$codeSet = $authSDK->parseRedirectResponse();
-
 if ($authSDK->parseRedirectResponse()) {
 
     //test retrieving additional state after redirected back to app:
@@ -38,11 +34,7 @@ if ($authSDK->parseRedirectResponse()) {
 
 } else {
     echo '<p><b>Returned</b></p>';
-    if ($codeSet == 'cancel') {
-        echo "<p>User didnt allow app.</p>";
-    } else {
-        echo "<p>No valid redirect url. Or user just logged out.</p>";
-    }
+    echo "<p>No valid redirect url. Or user just logged out.</p>";
     var_dump($_GET);
 }
 

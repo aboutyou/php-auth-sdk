@@ -1,3 +1,8 @@
+Version 0.3.3:
+- bugfix: getLogoutUrl() always cleaned up the session
+- improved: parseRedirectResponse() now cleans the session if there is a logout=true get parameter.
+- improved: getLogoutUrl() appends the logout=true get parameter.
+
 Version 0.3.2:
 
 - improved: logout works(remove oauth session) even if it fails at logoutUrl
