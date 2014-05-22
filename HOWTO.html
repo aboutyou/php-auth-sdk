@@ -120,7 +120,30 @@ td { vertical-align: top; }
     p, h2, h3 { orphans: 3; widows: 3; }
     h2, h3 { page-break-after: avoid; }
 }
-</style><title>HOWTO</title></head><body><h1 id="auth-sdk">auth-sdk</h1>
+</style><title>HOWTO</title></head><body><p><strong>Contents:</strong></p>
+<div class="toc">
+    <ul>
+        <li><a href="#auth-sdk">auth-sdk</a><ul>
+            <li><a href="#include-with-composer">Include with composer</a></li>
+            <li><a href="#oauth2-web-grant-type-usage">Oauth2 web grant type usage</a><ul>
+                <li><a href="#create-the-sdk-object">Create the sdk object</a></li>
+                <li><a href="#parse-the-response-login-redirected-back-to-your-site">Parse the response (login redirected back to your site)</a></li>
+                <li><a href="#check-user-status-show-login-or-logout">Check user status. Show login or logout</a></li>
+            </ul>
+            </li>
+            <li><a href="#examples">Examples</a><ul>
+                <li><a href="#running">Running</a></li>
+                <li><a href="#files">Files</a></li>
+                <li><a href="#config">Config</a></li>
+            </ul>
+            </li>
+        </ul>
+        </li>
+    </ul>
+</div>
+<div style="page-break-after: always;"></div>
+
+<h1 id="auth-sdk">auth-sdk</h1>
 <p>The auth-sdk is just a simple wrapper around persistent state storage and redirect response parsing for the
     <a href="http://tools.ietf.org/html/rfc6749#section-4.1">OAuth2 web grant type</a>.</p>
 <p>A simpler explanation is given <a href="http://aaronparecki.com/articles/2012/07/29/1/oauth2-simplified">http://aaronparecki.com/articles/2012/07/29/1/oauth2-simplified</a>.
@@ -160,11 +183,14 @@ td { vertical-align: top; }
     }
 </code></pre>
 
+<p>If you use php &gt;= 5.4 you can now try <code>./run.sh</code> (as root/sudo) in the <code>./examples</code> folder. For other options refer to the "Examples" section.</p>
+<div style="page-break-after: always;"></div>
+
 <h2 id="oauth2-web-grant-type-usage">Oauth2 web grant type usage</h2>
 <ul>
     <li>Have a look at: <code>./examples/basic.php</code></li>
 </ul>
-<h3 id="create-the-sdk-object">Create the sdk object:</h3>
+<h3 id="create-the-sdk-object">Create the sdk object</h3>
 <pre><code>$authSDK = new AuthSDK(array(
     'clientId'=&gt;'from_dev_center',
     'clientToken'=&gt;'from_dev_center',
@@ -177,7 +203,7 @@ td { vertical-align: top; }
 
 <p>(There are two optional parameters that can be "overwritten" 'loginUrl' and 'resourceUrl'. But usually there is no need
     for that)</p>
-<h3 id="parse-the-response-login-redirected-back-to-your-site">Parse the response (login redirected back to your site):</h3>
+<h3 id="parse-the-response-login-redirected-back-to-your-site">Parse the response (login redirected back to your site)</h3>
 <ul>
     <li>Call this method first and only once per request</li>
     <li>$parsed will be true, if it was a redirect. Just in case you need this information.</li>
@@ -185,11 +211,9 @@ td { vertical-align: top; }
 <pre><code>$parsed = $authSDK-&gt;parseRedirectResponse();
 </code></pre>
 
-<h3 id="check-user-status-show-login-or-logout">Check user status. Show login or logout:</h3>
+<h3 id="check-user-status-show-login-or-logout">Check user status. Show login or logout</h3>
 <ul>
-    <li>Check, if login button|redirect needed,</li>
-    <li>Its also possible to set 'state' params (will be returned)</li>
-    <li>getLogoutUrl() has an optional parameter redirectUrl. If set, after the logout you will be redirected to that. Else to the 'redirectUri' of the sdk config.</li>
+    <li>Check, if login button|redirect needed</li>
 </ul>
 <pre><code>$authResult = $authSDK-&gt;getUser();
     if($authResult-&gt;hasErrors()){
@@ -198,24 +222,37 @@ td { vertical-align: top; }
     $authSDK-&gt;setState('someKey','someVal');
 
     renderLoginButton( $authSDK-&gt;getLoginUrl() ); //renderLoginButton: your render method
+    var_dump($authResult-&gt;getErrors());
 
     }else{
     renderLogoutButton( $authSDK-&gt;getLogoutUrl() ); //renderLogoutButton: your render method
     var_dump($authResult-&gt;getResult()-&gt;response);
-    var_dump($authSDK-&gt;setState('someKey'));
+    var_dump($authSDK-&gt;getState('someKey'));
 
     }
 </code></pre>
 
-<h2 id="oauth2-token-type-usage">Oauth2 token type usage</h2>
 <ul>
-    <li>Is not supported by the php auth-sdk.</li>
+    <li>Its also possible to set 'state' params (will be returned)</li>
+    <li>getLogoutUrl() has an optional parameter redirectUrl. If set, after the logout you will be redirected to that. Else to the 'redirectUri' of the sdk config.</li>
+    <li>In both cases getLogoutUrl() will append the get parameter logout=true to redirectUrl (which is used by e.g. parseRedirectUrl() to clean the persistent storage).
+        <div style="page-break-after: always;"></div></li>
 </ul>
 <h2 id="examples">Examples</h2>
 <ul>
+    <li>Can be found in the folder:  ./examples/*</li>
+</ul>
+<h3 id="running">Running</h3>
+<ul>
     <li>
-        <p>Can be found in the folder:  ./examples/*:</p>
+        <p>If you use php &gt;= 5.4 you can now try <code>./run.sh</code> (as root/sudo) in the <code>./examples</code> folder.</p>
     </li>
+    <li>
+        <p>On Windows/if run.sh is not working: With php &gt;= 5.4 just try <code>php -S mytestserver.local:80</code> in the <code>./examples</code> folder (as root/sudo on linux/osx). For php &lt; 5.4 create a vhost config for your server.</p>
+    </li>
+</ul>
+<h3 id="files">Files</h3>
+<ul>
     <li>
         <p><code>./examples/basic.php</code>:</p>
         <ul>

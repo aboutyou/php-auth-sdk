@@ -30,6 +30,7 @@ if ($authSDK->parseRedirectResponse()) {
     } else {
         echo '<h2>auth-sdk returned errors</h2>';
         var_dump($apiReturn->getErrors());
+        var_dump($apiReturn->getResult());
     }
 
 } else {

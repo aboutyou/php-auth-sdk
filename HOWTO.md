@@ -1,3 +1,9 @@
+**Contents:**
+
+[TOC]
+
+<div style="page-break-after: always;"></div>
+
 # auth-sdk
 
 The auth-sdk is just a simple wrapper around persistent state storage and redirect response parsing for the
@@ -39,12 +45,15 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
     "collins/php-auth-sdk": "0.3.3"
   }
 ```
+If you use php >= 5.4 you can now try `./run.sh` (as root/sudo) in the `./examples` folder. For other options refer to the "Examples" section.
+
+<div style="page-break-after: always;"></div>
 
 ## Oauth2 web grant type usage
 
 * Have a look at: `./examples/basic.php`
 
-### Create the sdk object:
+### Create the sdk object
 
 ```
 $authSDK = new AuthSDK(array(
@@ -60,7 +69,7 @@ $authSDK = new AuthSDK(array(
 (There are two optional parameters that can be "overwritten" 'loginUrl' and 'resourceUrl'. But usually there is no need
 for that)
 
-### Parse the response (login redirected back to your site):
+### Parse the response (login redirected back to your site)
 
 * Call this method first and only once per request
 * $parsed will be true, if it was a redirect. Just in case you need this information.
@@ -69,11 +78,9 @@ for that)
 $parsed = $authSDK->parseRedirectResponse();
 ```
 
-### Check user status. Show login or logout:
+### Check user status. Show login or logout
 
-* Check, if login button|redirect needed,
-* Its also possible to set 'state' params (will be returned)
-* getLogoutUrl() has an optional parameter redirectUrl. If set, after the logout you will be redirected to that. Else to the 'redirectUri' of the sdk config.
+* Check, if login button|redirect needed
 
 ```
 $authResult = $authSDK->getUser();
@@ -83,22 +90,31 @@ if($authResult->hasErrors()){
 	$authSDK->setState('someKey','someVal');
 
 	renderLoginButton( $authSDK->getLoginUrl() ); //renderLoginButton: your render method
+	var_dump($authResult->getErrors());
 
 }else{
 	renderLogoutButton( $authSDK->getLogoutUrl() ); //renderLogoutButton: your render method
-	var_dump($authResult->getResult()->response); 
-	var_dump($authSDK->setState('someKey'));
+	var_dump($authResult->getResult()->response);
+	var_dump($authSDK->getState('someKey'));
 
 }
 ```
-
-## Oauth2 token type usage
-
-* Is not supported by the php auth-sdk.
+* Its also possible to set 'state' params (will be returned)
+* getLogoutUrl() has an optional parameter redirectUrl. If set, after the logout you will be redirected to that. Else to the 'redirectUri' of the sdk config.
+* In both cases getLogoutUrl() will append the get parameter logout=true to redirectUrl (which is used by e.g. parseRedirectUrl() to clean the persistent storage).
+<div style="page-break-after: always;"></div>
 
 ## Examples
 
-* Can be found in the folder:  ./examples/*:
+* Can be found in the folder:  ./examples/*
+
+### Running
+
+* If you use php >= 5.4 you can now try `./run.sh` (as root/sudo) in the `./examples` folder.
+
+* On Windows/if run.sh is not working: With php >= 5.4 just try `php -S mytestserver.local:80` in the `./examples` folder (as root/sudo on linux/osx). For php < 5.4 create a vhost config for your server.
+
+### Files
 
 * `./examples/basic.php`:
 	* example for typical usecase, just as much code as needed. Note, that you need to set your redirectUrl to {yourdomain}/basic.php
@@ -114,4 +130,3 @@ if($authResult->hasErrors()){
 [^1]:* If the user is not logged in there, it will grant the user for its username and password and then redirect back to your site with an access token.
 	* If your user however already is logged in, it will just redirect back to your site with an access token.
 	* There is one more authorization flow step after those possible grants from the user and really fetching the access token, but the auth-sdk will gently hide that from you
-	
