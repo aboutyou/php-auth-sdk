@@ -45,7 +45,7 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
     "collins/php-auth-sdk": "0.3.3"
   }
 ```
-If you use php >= 5.4 you can now try `./run.sh` (as root/sudo) in the `./examples` folder. For other options refer to the "Examples" section.
+**If you just want to run the examples now, please refer to the <a href="#examples2">"Examples"</a> section.**
 
 <div style="page-break-after: always;"></div>
 
@@ -62,7 +62,7 @@ $authSDK = new AuthSDK(array(
 		'clientSecret' => 'from_dev_center',
 		'redirectUri'=>'entered_in_dev_center',
 		'scope'=>'firstname',  //optional. the only valid value is firstname at the moment
-		'popup'=>'true|false', //optional. false will render the login webpage, true a simple login version
+		'popup'=>'true|false', //optional. true will render a small login, false the login webpage
 	),new SessionStorage());
 ```
 
@@ -104,15 +104,20 @@ if($authResult->hasErrors()){
 * In both cases getLogoutUrl() will append the get parameter logout=true to redirectUrl (which is used by e.g. parseRedirectUrl() to clean the persistent storage).
 <div style="page-break-after: always;"></div>
 
+<div id="examples2"></div>
 ## Examples
 
-* Can be found in the folder:  ./examples/*
+* Can be found in the folder:  `./examples/*`
 
 ### Running
 
-* If you use php >= 5.4 you can now try `./run.sh` (as root/sudo) in the `./examples` folder.
-
-* On Windows/if run.sh is not working: With php >= 5.4 just try `php -S mytestserver.local:80` in the `./examples` folder (as root/sudo on linux/osx). For php < 5.4 create a vhost config for your server.
+* Open a terminal, in the sdk root folder run `php composer.phar install`.
+<hr> 
+* If you use php >= 5.4 you can now try `./run.sh` (as root/sudo) in the `./examples` folder. Keep an eye on the console messages (it will complain about the /etc/hosts config, add it). If everything works, you should be able to open the (local) url shown in the console afterwards.
+<hr>
+* On Windows, or if run.sh is not working: With php >= 5.4 just try `php -S mytestserver.local:80` in the `./examples` folder (as root/sudo on linux/osx). Notice you have to add `127.0.0.1 mytestserver.local` to your `/etc/hosts` for this to work. (Windows: system32\drivers\etc\hosts)
+<hr>
+* For php < 5.4 refer to your server documentation to create a vhost config with the document root pointing to the `./examples` folder.
 
 ### Files
 

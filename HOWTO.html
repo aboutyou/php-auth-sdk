@@ -183,7 +183,7 @@ td { vertical-align: top; }
     }
 </code></pre>
 
-<p>If you use php &gt;= 5.4 you can now try <code>./run.sh</code> (as root/sudo) in the <code>./examples</code> folder. For other options refer to the "Examples" section.</p>
+<p><strong>If you just want to run the examples now, please refer to the <a href="#examples2">"Examples"</a> section.</strong></p>
 <div style="page-break-after: always;"></div>
 
 <h2 id="oauth2-web-grant-type-usage">Oauth2 web grant type usage</h2>
@@ -197,7 +197,7 @@ td { vertical-align: top; }
     'clientSecret' =&gt; 'from_dev_center',
     'redirectUri'=&gt;'entered_in_dev_center',
     'scope'=&gt;'firstname',  //optional. the only valid value is firstname at the moment
-    'popup'=&gt;'true|false', //optional. false will render the login webpage, true a simple login version
+    'popup'=&gt;'true|false', //optional. true will render a small login, false the login webpage
     ),new SessionStorage());
 </code></pre>
 
@@ -238,18 +238,21 @@ td { vertical-align: top; }
     <li>In both cases getLogoutUrl() will append the get parameter logout=true to redirectUrl (which is used by e.g. parseRedirectUrl() to clean the persistent storage).
         <div style="page-break-after: always;"></div></li>
 </ul>
+<div id="examples2"></div>
+
 <h2 id="examples">Examples</h2>
 <ul>
-    <li>Can be found in the folder:  ./examples/*</li>
+    <li>Can be found in the folder:  <code>./examples/*</code></li>
 </ul>
 <h3 id="running">Running</h3>
 <ul>
-    <li>
-        <p>If you use php &gt;= 5.4 you can now try <code>./run.sh</code> (as root/sudo) in the <code>./examples</code> folder.</p>
-    </li>
-    <li>
-        <p>On Windows/if run.sh is not working: With php &gt;= 5.4 just try <code>php -S mytestserver.local:80</code> in the <code>./examples</code> folder (as root/sudo on linux/osx). For php &lt; 5.4 create a vhost config for your server.</p>
-    </li>
+    <li>Open a terminal, in the sdk root folder run <code>php composer.phar install</code>.
+        <hr> </li>
+    <li>If you use php &gt;= 5.4 you can now try <code>./run.sh</code> (as root/sudo) in the <code>./examples</code> folder. Keep an eye on the console messages (it will complain about the /etc/hosts config, add it). If everything works, you should be able to open the (local) url shown in the console afterwards.
+        <hr></li>
+    <li>On Windows, or if run.sh is not working: With php &gt;= 5.4 just try <code>php -S mytestserver.local:80</code> in the <code>./examples</code> folder (as root/sudo on linux/osx). Notice you have to add <code>127.0.0.1 mytestserver.local</code> to your <code>/etc/hosts</code> for this to work. (Windows: system32\drivers\etc\hosts)
+        <hr></li>
+    <li>For php &lt; 5.4 refer to your server documentation to create a vhost config with the document root pointing to the <code>./examples</code> folder.</li>
 </ul>
 <h3 id="files">Files</h3>
 <ul>
