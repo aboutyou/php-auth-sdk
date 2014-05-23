@@ -1,3 +1,8 @@
+Version 0.3.4:
+
+- Added index.php, with config checks and instructions to get started.
+- Added run.sh, composer.phar and documentation how to start examples via php's (> 5.4) internal server.
+
 Version 0.3.3:
 - bugfix: getLogoutUrl() always cleaned up the session
 - improved: parseRedirectResponse() now cleans the session if there is a logout=true get parameter.
