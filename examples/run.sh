@@ -15,4 +15,4 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 SDKHOST='mytestserver.local'
-php -S ${SDKHOST}:80 || echo "" && echo "POSSIBLE REASON: add '127.0.0.1 $SDKHOST' to /etc/hosts"
+php -S ${SDKHOST}:8080 || echo "" && echo "POSSIBLE REASON: add '127.0.0.1 $SDKHOST' to /etc/hosts"

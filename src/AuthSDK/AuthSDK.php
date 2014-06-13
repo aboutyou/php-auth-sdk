@@ -56,7 +56,7 @@ class AuthSDK
         $this->_clientSecret = $params['clientSecret'];
         $this->_redirectUri = $params['redirectUri'];
 
-        $this->_loginUrl = isset($params['loginUrl']) ? $params['loginUrl'] : 'https://checkout.mary-paul.de';
+        $this->_loginUrl = isset($params['loginUrl']) ? $params['loginUrl'] : 'https://checkout.aboutyou.de';
         $this->_resourceUrl = isset($params['resourceUrl']) ? $params['resourceUrl'] : 'https://oauth.collins.kg/oauth';
         $this->_scope = isset($params['scope']) ? $params['scope'] : 'firstname';
         $this->_popup = isset($params['popup']) ? $params['popup'] : true;
@@ -205,12 +205,12 @@ class AuthSDK
 
                 $curl = $this->createCurl();
                 $curl->setBasicAuthentication($this->_clientId, $this->_clientToken);
-                $params = [
+                $params = array(
                     'client_id' => $this->_clientId,
                     'grant_type' => 'authorization_code',
                     'redirect_uri' => $this->_redirectUri,
                     'code' => $this->getGrantCode()
-                ];
+                );
 
                 $url = rtrim($this->_resourceUrl, '/') . '/oauth/token?' . http_build_query($params,null,'&');
                 $curl->get($url);

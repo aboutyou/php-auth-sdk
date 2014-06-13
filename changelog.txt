@@ -1,5 +1,10 @@
 Version 0.3.4:
 
+- Replaced php 5.4 array syntax with 5.3 version.
+- Changed default login url to checkout.aboutyou.de.
+
+Version 0.3.4:
+
 - Added index.php, with config checks and instructions to get started.
 - Added run.sh, composer.phar and documentation how to start examples via php's (> 5.4) internal server.
 
