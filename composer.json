@@ -1,6 +1,8 @@
 {
     "name": "aboutyou/auth-sdk",
-    "description": "ABOUTYOU External application authorization SDK",
+    "description": "ABOUT YOU External application authorization SDK",
+    "keywords": ["aboutyou","sdk"],
+    "homepage": "https://developer.aboutyou.de"
     "license": "MIT",
     "autoload": {
         "psr-0": {
