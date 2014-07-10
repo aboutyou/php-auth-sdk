@@ -1,20 +1,14 @@
 {
-    "name": "collins/php-auth-sdk",
-    "description": "External application authorization SDK",
-    "license": "proprietary",
+    "name": "aboutyou/auth-sdk",
+    "description": "ABOUTYOU External application authorization SDK",
+    "license": "MIT",
     "autoload": {
         "psr-0": {
             "AuthSDK\\": "src/"
         }
     },
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
-        }
-    ],
     "require":{
         "php": ">=5.3.0",
-        "collins/php-jws": "0.1.0"
+        "aboutyou/jws": "~0.1"
     }
 }
