@@ -31,18 +31,8 @@ You can use the acces token then stored in the auth-sdk for subsequent api calls
 ## Include with composer
 
 ```
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-auth-sdk.git"
-    },
-    {
-      "type": "git",
-      "url": "https://app-developers-89:98ashUZsujna!isi.asU7@antevorte.codebasehq.com/public-sdks-2/php-jws.git"
-    }
-  ],
   "require": {
-    "collins/php-auth-sdk": "0.3.5"
+    "aboutyou/auth-sdk": "~0.3.6"
   }
 ```
 **If you just want to run the examples now, please refer to the <a href="#examples2">"Examples"</a> section.**
