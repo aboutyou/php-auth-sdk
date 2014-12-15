@@ -130,6 +130,7 @@ class AuthSDK
 
     protected function parseStateUrlValue($value)
     {
+        $value = urldecode($value);
         return (array)json_decode(base64_decode($value));
     }
 
@@ -145,7 +146,7 @@ class AuthSDK
     {
         //the sdk requires state was given for auth request..
         if (isset($_GET['state'],$_GET['code']) && $this->getState('csrf')) {
-            $states = $this->parseStateUrlValue($_GET['state']);
+            $states = $this->parseStateUrlValue($state);
             if (isset($states['csrf']) && $this->getState('csrf') === $states['csrf']) {
 
                 unset($states['csrf']);
@@ -385,4 +386,3 @@ class AuthSDK
         return $curl;
     }
 }
-
