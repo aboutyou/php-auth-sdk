@@ -146,7 +146,7 @@ class AuthSDK
     {
         //the sdk requires state was given for auth request..
         if (isset($_GET['state'],$_GET['code']) && $this->getState('csrf')) {
-            $states = $this->parseStateUrlValue($state);
+            $states = $this->parseStateUrlValue($_GET['state']);
             if (isset($states['csrf']) && $this->getState('csrf') === $states['csrf']) {
 
                 unset($states['csrf']);
