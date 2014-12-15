@@ -130,6 +130,7 @@ class AuthSDK
 
     protected function parseStateUrlValue($value)
     {
+        $value = urldecode($value);
         return (array)json_decode(base64_decode($value));
     }
 
@@ -385,4 +386,3 @@ class AuthSDK
         return $curl;
     }
 }
-
